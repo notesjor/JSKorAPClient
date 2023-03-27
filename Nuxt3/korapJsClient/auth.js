@@ -9,7 +9,7 @@ export default class auth {
     };
 
     var url = "https://www.owid.de/api/oauth2/new";
-    return fetch(url, requestOptions)
+    fetch(url, requestOptions)
       .then((response) => {
         if (response.status != 200) throw new Error("unauthorized");
         return response;

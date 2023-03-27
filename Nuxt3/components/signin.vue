@@ -31,6 +31,8 @@ export default {
     mounted() {
         this.$data.authentication = new auth();
         this.$data.isSignedIn = this.$data.authentication.isSignedIn;        
+        if(this.$data.authentication.isSignedIn)
+            this.$data.btn_color = "success";
     },
 
     methods: {

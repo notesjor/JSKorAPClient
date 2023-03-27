@@ -12,7 +12,10 @@
       <v-row style="margin-bottom:20px">
         <kwicSearch></kwicSearch>
       </v-row>
-    </v-main>
+      <v-row style="margin-bottom:20px">
+        <virtualCorpora></virtualCorpora>
+      </v-row>
+    </v-main>    
     <v-footer theme="dark" style="max-height: 50px;">Test</v-footer>
   </v-app>
 </template>

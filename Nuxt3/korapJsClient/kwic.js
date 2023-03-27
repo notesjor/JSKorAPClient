@@ -19,13 +19,22 @@ export default class kwic {
   }
 
   /**
+   * Execute a KWIC-Search - please fill out all parameters (also the optional/default ones)
    * @param {string} authToken - authentication token (use korapJsClient/auth.js to get one)
+   * @param {string} corpusQuery - corpus query (default: null > ALL)
    * @param {string} query - query string
    * @param {string} queryLanguage - query language (use property 'availableLanguages' to get a list of available languages)
-   * @param {number} page - page number (default: 1)
+   * @param {number} page - page number (default: 1). Only page=1 get the maxPage number.
    * @param {function} func - callback function - returns the result of the search as json
    */
-  search(bearerToken, query, queryLanguage, page = 1, func) {
+  search(
+    bearerToken,
+    corpusQuery = null,
+    query,
+    queryLanguage,
+    page = 1,
+    func
+  ) {
     var ql = this.__languageDict[queryLanguage];
 
     var myHeaders = new Headers();
@@ -37,10 +46,13 @@ export default class kwic {
       redirect: "follow",
     };
 
-    var url = `https://korap.ids-mannheim.de/api/v1.0/search?ql=${ql}&q=${encodeURIComponent(
-      query
-    )}&page=${page}`;
-    return fetch(url, requestOptions)
+    var cq = "";
+    if (corpusQuery != null) cq = "&cq=" + encodeURIComponent(corpusQuery);
+
+    var url = `https://korap.ids-mannheim.de/api/v1.0/search?${cq}cutoff=${
+      page != 1
+    }&ql=${ql}&q=${encodeURIComponent(query)}&page=${page}`;
+    fetch(url, requestOptions)
       .then((response) => {
         if (response.status != 200) throw new Error("KWIC-Search failed");
         return response;
@@ -112,7 +124,7 @@ export default class kwic {
     var matchesClean = [];
     for (var i = 0; i < matches.length; i++) {
       matchesClean.push(this.match_GetSnippetCleanExtended(matches[i]));
-    } 
+    }
     return matchesClean;
   }
 
@@ -212,6 +224,6 @@ export default class kwic {
    * @returns the string without the find string
    */
   __removeAll(str, find) {
-    return str.replace(new RegExp(find, 'g'), '');
+    return str.replace(new RegExp(find, "g"), "");
   }
 }

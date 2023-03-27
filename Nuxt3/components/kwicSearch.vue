@@ -40,6 +40,11 @@
                 </div>
             </v-row>
             <!-- Suchergebnisse ENDE -->
+            <!-- Suchergebnisse-Paging START -->
+            <v-row v-if="pageMax > 1">
+                <v-pagination :length="pageMax" v-model="page" total-visible="10" :disabled="searchProgress"></v-pagination>
+            </v-row>
+            <!-- Suchergebnisse-Paging END -->
             <!-- Funktionen START -->
             <v-row style="margin-top:50px" v-if="pageCurrent != null">
                 <div style="padding-top:10px">Benchmark: {{ benchmark }}</div>
@@ -74,6 +79,8 @@ export default {
             pageCurrent: null,
 
             benchmark: null,
+
+            corpusQuery: "corpusSigle=ART[0-9]*"
         };
     },
 
@@ -91,11 +98,11 @@ export default {
         search() {
             var self = this.$data;
 
-            self.page = 1;
             self.pageMax = 0;
+            self.page = 1;            
             self.searchProgress = true;
 
-            self.kwic.search(self.authentication.bearerToken, self.query, self.language, self.page, (result) => {
+            self.kwic.search(self.authentication.bearerToken, self.corpusQuery, self.query, self.language, self.page, (result) => {
                 var pageMax = self.kwic.searchResult_GetMaxPage(result);
                 var benchmark = self.kwic.searchResult_GetBenchmark(result);
                 var matches = self.kwic.searchResult_GetMatchesQuick(result);
@@ -109,6 +116,23 @@ export default {
         },
         delete(){
             this.$data.pageCurrent = null;
+        }
+    },
+
+    watch:{
+        page: function(){
+            var self = this.$data;
+            self.searchProgress = true;
+
+            self.kwic.search(self.authentication.bearerToken, self.corpusQuery, self.query, self.language, self.page, (result) => {
+                var benchmark = self.kwic.searchResult_GetBenchmark(result);
+                var matches = self.kwic.searchResult_GetMatchesQuick(result);
+
+                self.benchmark = benchmark;
+                self.pageCurrent = matches;
+
+                self.searchProgress = false;
+            });
         }
     }
 }
