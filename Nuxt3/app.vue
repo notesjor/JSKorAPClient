@@ -1,15 +1,25 @@
 <template>
-  <div>
-    <h1 class="text-3xl font-bold underline">
-    Hello world!
-  </h1>
-  <v-btn @click="test"><v-icon style="color:black">mdi-account</v-icon>Test</v-btn>  
-  </div>
+  <v-app>
+    <v-app-bar>
+      <h1 class="text-3xl font-bold">
+        KorAP: JSClient-Test
+      </h1>
+    </v-app-bar>
+    <v-main theme="light" style="padding:100px">
+      <v-row style="margin-bottom:20px">
+        <signin></signin>
+      </v-row>
+      <v-row style="margin-bottom:20px">
+        <kwicSearch></kwicSearch>
+      </v-row>
+    </v-main>
+    <v-footer theme="dark" style="max-height: 50px;">Test</v-footer>
+  </v-app>
 </template>
 
 <script>
 export default {
-  methods: {
+  methods: {    
     test() {
       alert("test");
     }
@@ -17,6 +27,4 @@ export default {
 }
 </script>
 
-<style>
-
-</style>
+<style></style>
