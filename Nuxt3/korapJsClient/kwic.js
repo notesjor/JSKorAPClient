@@ -49,7 +49,7 @@ export default class kwic {
     var cq = "";
     if (corpusQuery != null) cq = "&cq=" + encodeURIComponent(corpusQuery);
 
-    var url = `https://korap.ids-mannheim.de/api/v1.0/search?${cq}cutoff=${
+    var url = `https://korap.ids-mannheim.de/api/v1.0/search?context=sentence&${cq}cutoff=${
       page != 1
     }&ql=${ql}&q=${encodeURIComponent(query)}&page=${page}`;
     fetch(url, requestOptions)
@@ -63,7 +63,7 @@ export default class kwic {
       })
       .catch((error) => {
         console.log("error", error);
-        func(false);
+        func(null);
       });
   }
 
