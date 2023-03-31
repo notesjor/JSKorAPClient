@@ -64,7 +64,7 @@ export default class auth {
     var date = Date.parse(utc);
     var now = new Date();
     if (now > date) {
-      self.__reset();
+      this.__reset();
       return false;
     }
 
