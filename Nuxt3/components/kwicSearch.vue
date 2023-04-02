@@ -35,12 +35,15 @@
                             <div class="cell truncate" style="padding: 3px 3px 0px 3px; text-align: right; font-size: 14px; direction: rtl;" @click="fullText">
                                 {{ item.left }}                                
                             </div>
-                            <div class="cell" style="padding: 3px 3px 3px 3px; font-weight: 600; font-size: 14px;" :ref="match">
+                            <div class="cell" style="padding: 3px 3px 3px 3px; font-weight: 600; font-size: 14px;">
                                 {{ item.match }}                                
                                 <div style="position:relative; top:-3px; font-size: 10px; font-weight: 300; width: 100%;">{{ item.sigle }}</div>
                             </div>
-                            <div class="cell truncate" style="padding: 3px 0px 3px 3px; font-size: 14px;" @click="fullText">
+                            <div class="cell truncate" style="padding: 3px 0px 3px 3px; text-align: left; font-size: 14px;" @click="fullText">
                                 {{ item.right }}
+                            </div>
+                            <div class="cell" style="padding: 3px 0px 3px 15px; font-size: 14px;">
+                                <layerView :matchId="item.id"></layerView>
                             </div>                            
                         </div>
                     </div>
@@ -48,7 +51,7 @@
             </v-row>
             <!-- Suchergebnisse ENDE -->
             <!-- Suchergebnisse-Paging START -->
-            <v-row v-if="pageMax > 1">
+            <v-row v-if="this.$data.pageMax > 1">
                 <v-pagination :length="pageMax" v-model="page" total-visible="10" :disabled="searchProgress"></v-pagination>
             </v-row>
             <!-- Suchergebnisse-Paging END -->
@@ -85,7 +88,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     cursor: pointer;
-    max-width: 300px;
+    max-width: 325px;
   }
 
 </style>
@@ -99,7 +102,6 @@ export default {
         return {
             authentication: null,
             isSignedIn: false,
-            dialog_signin_error: false,
 
             kwic: null,
             query: "[orth=Hausmeisterin/i & pos=NN]",
@@ -109,13 +111,12 @@ export default {
             searchProgress: false,
 
             page: 1,
-            pageMax: 0,
+            pageMax: 1,
             pageCurrent: null,
 
             benchmark: null,
 
-            corpusQuery: null,
-            rightCorner: 0,
+            corpusQuery: null
         };
     },
 
@@ -130,9 +131,8 @@ export default {
     methods: {
         search() {
             var self = this.$data;
-            var s = this;
 
-            self.pageMax = 0;
+            self.pageMax = 1;
             self.page = 1;
             self.searchProgress = true;
 
@@ -151,7 +151,6 @@ export default {
                 self.pageCurrent = matches;
 
                 self.searchProgress = false;
-                self.rightCorner = s.$refs.match.getBoundingClientRect().left * -1;
             });
         },
         delete() {

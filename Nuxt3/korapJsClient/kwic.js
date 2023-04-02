@@ -20,7 +20,7 @@ export default class kwic {
 
   /**
    * Execute a KWIC-Search - please fill out all parameters (also the optional/default ones)
-   * @param {string} authToken - authentication token (use korapJsClient/auth.js to get one)
+   * @param {string} bearerToken - authentication token (use korapJsClient/auth.js to get one)
    * @param {string} corpusQuery - corpus query (default: null > ALL)
    * @param {string} query - query string
    * @param {string} queryLanguage - query language (use property 'availableLanguages' to get a list of available languages)
@@ -80,7 +80,7 @@ export default class kwic {
    * @returns get the total number of result pages
    */
   searchResult_GetMaxPage(searchResult) {
-    return searchResult.meta.totalResults / 25;
+    return Math.floor(searchResult.meta.totalResults / 25);
   }
 
   /**
@@ -216,6 +216,120 @@ export default class kwic {
     res.date = this.match_GetPubDate(match);
 
     return res;
+  }
+
+  /**
+   * @param {*} bearerToken - authentication token (use korapJsClient/auth.js to get one)
+   * @param {*} matchId - use match_GetMatches(json) to get a list of matches (you need here a single one) - match.id example: match-WUD17/A91/44293-p3691-3692
+   * @param {*} func - callback function (token + annotation as data)
+   */
+  match_GetLayerData(bearerToken, matchId, func) {
+    // Nehme die match.id und baue daraus eine URL
+    // Bsp. match-WUD17/A91/44293-p3691-3692
+    var matchQuery = matchId.replace("match-", "");
+    var parts = matchQuery.split("/");
+    var corpus = parts[0];
+    var document = parts[1];
+    var text = parts.slice(2).join("/");
+    var parts = text.split("-");
+    text = parts[0];
+    var range = parts.slice(1).join("-");
+
+    var url = `https://korap.ids-mannheim.de/api/v1.0/corpus/${corpus}/${document}/${text}/${range}?foundry=*`;
+
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + bearerToken);
+
+    var requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
+    // Frage die URL nach den Layer-Daten ab
+    fetch(url, requestOptions)
+      .then((response) => {
+        if (response.status != 200) throw new Error("Match-Request failed");
+        return response;
+      })
+      .then((response) => response.json())
+      .then((json) => {
+        // Nehme das json.snippet und parse die XML-Daten
+        var parser = new DOMParser();console.log(json.snippet);
+        var xmlDoc = parser.parseFromString(
+          "<xml>" + json.snippet.replace("<mark>", "").replace("</mark>", "") + "</xml>", // ist notwendig, da ein root-Element fehlt
+          "text/xml"
+        );
+
+        // /xml/span = left/right-context oder match
+        // /xml/span/span = token
+        var spans = xmlDoc.evaluate(
+          "/xml/span/span",
+          xmlDoc,
+          null,
+          XPathResult.ANY_TYPE,
+          null
+        );
+        var tokens = [];
+
+        var span = spans.iterateNext();
+        while (span) {
+          var token = {};
+          token.layers = [];
+
+          // Löst das Problem ohne Rekursion
+          var current = span;
+          while (current && current.nodeName == "span") {
+            var title = current.getAttribute("title");
+            if (!title) continue;
+
+            // Bsp.: title = marmot/m:gender:masc
+            var parts = title.split("/");
+            var foundry = parts[0];
+            title = parts.slice(1).join("/");
+            parts = title.split(":");
+            var layer = parts[0];
+            var value = parts.slice(1).join(":");
+
+            token.layers.push({
+              foundry: foundry,
+              layer: layer,
+              value: value,
+            });
+            token.text = current.textContent;
+
+            // Rekurisv
+            current = current.firstChild;
+          }
+
+          tokens.push(token);
+          span = spans.iterateNext();
+        }
+
+        func(tokens);
+      })
+      .catch((error) => {
+        console.log("error", error);
+        func(null);
+      });
+  }
+
+  /**
+   * @param {*} layerData - use match_GetLayerData to get the layer data
+   * @returns a list of unique foundry/layer combinations
+   */
+  layerData_GetInfo(layerData) {
+    var foundries = [];
+    foundries.push("TEXT");
+
+    layerData.forEach((token) => {
+      token.layers.forEach((layer) => {
+        if (!foundries.includes(layer.foundry + "/" + layer.layer))
+          foundries.push(layer.foundry + "/" + layer.layer);
+      });
+    });
+
+    return foundries;
   }
 
   /**
