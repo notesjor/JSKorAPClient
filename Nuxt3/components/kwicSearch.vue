@@ -141,14 +141,9 @@ export default {
                     self.searchProgress = false;
                     return;
                 }
-
-                var pageMax = self.kwic.searchResult_GetMaxPage(result);
-                var benchmark = self.kwic.searchResult_GetBenchmark(result);
-                var matches = self.kwic.searchResult_GetMatchesQuick(result);
-
-                self.pageMax = pageMax;
-                self.benchmark = benchmark;
-                self.pageCurrent = matches;
+                self.pageMax = self.kwic.searchResult_GetMaxPage(result);
+                self.benchmark = self.kwic.searchResult_GetBenchmark(result);
+                self.pageCurrent = self.kwic.searchResult_GetMatchesQuick(result);
 
                 self.searchProgress = false;
             });
@@ -167,11 +162,8 @@ export default {
             self.searchProgress = true;
 
             self.kwic.search(self.authentication.bearerToken, self.corpusQuery, self.query, self.language, self.page, (result) => {
-                var benchmark = self.kwic.searchResult_GetBenchmark(result);
-                var matches = self.kwic.searchResult_GetMatchesQuick(result);
-
-                self.benchmark = benchmark;
-                self.pageCurrent = matches;
+                self.benchmark = self.kwic.searchResult_GetBenchmark(result);
+                self.pageCurrent = self.kwic.searchResult_GetMatchesQuick(result);
 
                 self.searchProgress = false;
             });
