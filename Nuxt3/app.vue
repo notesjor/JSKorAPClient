@@ -25,7 +25,8 @@
         </v-col>
       </v-row>
       <v-row style="margin-bottom:20px">
-        <kwicSearch></kwicSearch>
+        <v-col><kwicSearch></kwicSearch></v-col>
+        <!--<v-col><userInfo></userInfo></v-col>-->
       </v-row>
       <!--
       <v-row style="margin-bottom:20px">
