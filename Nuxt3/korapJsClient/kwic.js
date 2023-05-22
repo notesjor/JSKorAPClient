@@ -255,7 +255,7 @@ export default class kwic {
       .then((response) => response.json())
       .then((json) => {
         // Nehme das json.snippet und parse die XML-Daten
-        var parser = new DOMParser();console.log(json.snippet);
+        var parser = new DOMParser();
         var xmlDoc = parser.parseFromString(
           "<xml>" + json.snippet.replace("<mark>", "").replace("</mark>", "") + "</xml>", // ist notwendig, da ein root-Element fehlt
           "text/xml"
