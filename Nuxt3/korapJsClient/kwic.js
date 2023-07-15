@@ -80,7 +80,7 @@ export default class kwic {
    * @returns get the total number of result pages
    */
   searchResult_GetMaxPage(searchResult) {
-    return Math.floor(searchResult.meta.totalResults / 25);
+    return searchResult.meta.totalResults / 25 + (searchResult.meta.totalResults % 25 > 0 ? 1 : 0);
   }
 
   /**
