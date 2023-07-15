@@ -19,6 +19,27 @@ export default class kwic {
   }
 
   /**
+   * @param {string} language - language name
+   * @returns {string} language value (needed by KorAP-API)
+   */
+  languageToValue(language) {
+    return this.__languageDict[language];
+  };
+
+  /**
+   * @param {string} value - language value (needed by KorAP-API)
+   * @returns {string} language name
+   */
+  valueToLanguage(value) {
+    for (var i = 0; i < this.__languageKeys.length; i++) {
+      if (this.__languageDict[this.__languageKeys[i]] == value) {
+        return this.__languageKeys[i];
+      }
+    }
+    return null;
+  };
+
+  /**
    * Execute a KWIC-Search - please fill out all parameters (also the optional/default ones)
    * @param {string} bearerToken - authentication token (use korapJsClient/auth.js to get one)
    * @param {string} corpusQuery - corpus query (default: null > ALL)
