@@ -34,7 +34,9 @@
       </v-row>
     -->
     </v-main>
-    <v-footer theme="dark" style="max-height: 50px;">Test</v-footer>
+    <v-footer theme="dark" style="max-height: 50px;">
+      Token: <api-token></api-token>
+    </v-footer>
   </v-app>
 </template>
 

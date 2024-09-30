@@ -11,13 +11,13 @@
   "devDependencies": {
     "@mdi/font": "^7.4.47",
     "@mdi/js": "^7.4.47",
-    "autoprefixer": "^10.4.19",
-    "nuxt": "^3.12.3",
-    "postcss": "^8.4.39",
-    "sass": "^1.77.6",
-    "tailwindcss": "^3.4.4"
+    "autoprefixer": "^10.4.20",
+    "nuxt": "^3.13.2",
+    "postcss": "^8.4.47",
+    "sass": "^1.79.3",
+    "tailwindcss": "^3.4.13"
   },
   "dependencies": {
-    "vuetify": "^3.6.11"
+    "vuetify": "^3.7.2"
   }
 }
