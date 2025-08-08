@@ -23,7 +23,7 @@
             <h2 style="text-align:center;">Bitte warten...</h2>
             <h4 style="text-align:center;">Die KorAP-Abfrage nimmt wenige Sekunden in Anspruch.</h4>
           </div>
-          <div v-else-if="pageCurrent === -1">
+          <div v-else-if="pageCurrent === -1 || pageCurrent.length === 0">
             <h2 style="text-align:center;">Keine Ergebnisse</h2>
             <h4 style="text-align:center;">Die KorAP-Abfrage lieferte keine passenden Ergebnisse. Bitte probieren Sie eine
               andere Abfrage aus.</h4>
