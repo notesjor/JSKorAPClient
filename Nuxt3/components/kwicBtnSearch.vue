@@ -159,7 +159,7 @@ export default {
       target.srcElement.style.whiteSpace = 'normal';
     },
     getKorapLink() {
-      return "https://korap.ids-mannheim.de/?q=" + encodeURIComponent(this.query) + "&ql=poliqarp&cutoff=1"
+      return this.$data.kwic.getKorapLink(this.$props.corpusQuery, this.$props.query, this.$props.language);
     },
     signOut() {
       authentication.signOut();

@@ -21,7 +21,7 @@ export default class kwic {
   /**
    * Execute a KWIC-Search - please fill out all parameters (also the optional/default ones)
    * @param {string} bearerToken - authentication token (use korapJsClient/auth.js to get one)
-   * @param {string} corpusQuery - corpus query (default: null > ALL)
+   * @param {string|null} corpusQuery - corpus query (default: null > ALL)
    * @param {string} query - query string
    * @param {string} queryLanguage - query language (use property 'availableLanguages' to get a list of available languages)
    * @param {number} page - page number (default: 1). Only page=1 get the maxPage number.
@@ -65,6 +65,23 @@ export default class kwic {
         console.log("error", error);
         func(null);
       });
+  }
+
+  
+  /**
+   * Generates a KorAP search URL based on the provided query, query language, and optional corpus query.
+   *
+   * @param {string|null} corpusQuery - An optional corpus query to filter the search. If null, no corpus filter is applied.
+   * @param {string} query - The main search query.
+   * @param {string} queryLanguage - The language of the query (used to determine the query language parameter).
+   * @returns {string} The constructed KorAP search URL.
+   */
+  getKorapLink(corpusQuery = null, query, queryLanguage) {
+    var ql = this.__languageDict[queryLanguage];
+    var cq = "";
+    if (corpusQuery != null) cq = "&cq=" + encodeURIComponent(corpusQuery);
+    
+    return `https://korap.ids-mannheim.de/?ql=${ql}${cq}&q=${encodeURIComponent(query)}&cutoff=1`
   }
 
   /**
