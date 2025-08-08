@@ -20,6 +20,7 @@
             </v-card-subtitle>
             <v-card-text>
               <kwicBtnSearch query="[orth=Hausmeisterin/i & pos=NN]"></kwicBtnSearch>
+              <kwicIconBtnSearch query="[orth=Hausmeisterin/i & pos=NN]"></kwicIconBtnSearch>
             </v-card-text>
           </v-card>
         </v-col>
