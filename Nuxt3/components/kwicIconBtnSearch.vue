@@ -150,9 +150,10 @@ export default {
 
       self.$data.kwic.search(self.$data.authentication.bearerToken, self.$props.corpusQuery, self.$props.query, self.$props.language, self.$data.page, (result) => {
         if (result == null) {
+          self.pageCurrent = -1;
           return;
         }
-
+		
         self.pageMax = self.kwic.searchResult_GetMaxPage(result);
         self.pageCurrent = self.kwic.searchResult_GetMatchesQuick(result);
       });
