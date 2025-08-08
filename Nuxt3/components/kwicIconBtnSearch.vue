@@ -2,7 +2,7 @@
   <div>
     <!-- BUTTON START -->    
     <v-btn icon style="background-color: rgb(99, 111, 7); padding: 1px 4px 2px 4px;" density="compact" @click="signinSearch">
-      <img src="/Icon.svg" alt="Icon" style="width:24px; height:24px;" />
+      <img src="/icon_korap.svg" alt="Icon" style="width:24px; height:24px;" />
     </v-btn>
     <!-- BUTTON ENDE -->
     <!-- ANMELDUNG ERFOLGREICH - SUCHE - START -->
